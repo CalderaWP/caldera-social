@@ -8,6 +8,6 @@ export const settingsShape = PropTypes.shape({
 });
 
 export const settingsDefaults = {
-	showTwitter: false,
+	showTwitter: true,
 	shareHeader: 'Share This Great Content On Social Media!'
 };

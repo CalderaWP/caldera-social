@@ -4,8 +4,9 @@ import {settingsShape,settingsDefaults} from "./propTypes";
 export const SocialShare = (props) => {
 	const {settings}  = props;
  	const shareLink = () => {
- 		const {shareMessage,shareUrl} = settings;
-		return `https://twitter.com/intent/tweet?text=${encodeURI(`${shareMessage} ${shareUrl}` )}`;
+ 		const {shareTitle,shareUrl} = settings;
+ 		console.log(shareTitle,shareUrl);
+		return `https://twitter.com/intent/tweet?text=${encodeURI(`${shareTitle} ${shareUrl}` )}`;
 	};
 
 	return(
@@ -26,4 +27,4 @@ SocialShare.propTypes = {
 
 SocialShare.defaultProps = {
 	settings: settingsDefaults
-}
+};

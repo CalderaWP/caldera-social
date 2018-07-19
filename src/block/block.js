@@ -12,17 +12,12 @@ import './editor.scss';
 const { __ } = wp.i18n;
 const { registerBlockType } = wp.blocks;
 import {SocialShare} from "../components/SocialShare";
-import {SocialShareSettings} from "../components/SocialShareSettings";
 const InspectorControls = wp.editor.InspectorControls;
 
-function settings(attributes) {
-	const settings = {
-		...attributes,
-		shareTitle: '',
-		shareUrl: ''
-	};
-	return settings;
-}
+import {SocialShareSettings } from "../components/SocialShareSettings";
+import {select} from '@wordpress/data';
+
+
 
 registerBlockType( 'caldera/social-share', {
 	title: __( 'Caldera Social' ),
@@ -42,15 +37,21 @@ registerBlockType( 'caldera/social-share', {
 			source: 'meta',
 			meta:   'caldera_social_shareHeader'
 		},
-
-
 	},
+	useOnce: true,
 
 	edit( {attributes,setAttributes,className} ) {
-		const settings = settings(attributes);
 		const onChange =(newValue) => {
 			setAttributes(newValue);
 		};
+
+		const {getDocumentTitle,getPermalink} = wp.data.select( 'core/editor' );
+		const settings = {
+			...attributes,
+			shareTitle: getDocumentTitle(),
+			shareUrl: getPermalink()
+		};
+
 		return (
 			<div className={ className }>
 				<InspectorControls>
@@ -60,7 +61,6 @@ registerBlockType( 'caldera/social-share', {
 					/>
 				</InspectorControls>
 				<div>
-
 					<SocialShare
 						settings={settings}
 					/>
@@ -69,9 +69,12 @@ registerBlockType( 'caldera/social-share', {
 			</div>
 		);
 	},
-
 	save({attributes}) {
-		const settings = settings(attributes);
+		const settings = {
+			...attributes,
+			shareTitle: '',
+			shareUrl: ''
+		};
 		return (
 			<div>
 				<SocialShare
