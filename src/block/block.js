@@ -11,47 +11,72 @@ import './editor.scss';
 
 const { __ } = wp.i18n;
 const { registerBlockType } = wp.blocks;
+import {SocialShare} from "../components/SocialShare";
+import {SocialShareSettings} from "../components/SocialShareSettings";
+const InspectorControls = wp.editor.InspectorControls;
+
+function settings(attributes) {
+	const settings = {
+		...attributes,
+		shareTitle: '',
+		shareUrl: ''
+	};
+	return settings;
+}
 
 registerBlockType( 'caldera/social-share', {
-	// Block name. Block names must be string that contains a namespace prefix. Example: my-plugin/my-custom-block.
-	title: __( 'Caldera Social' ), // Block title.
+	title: __( 'Caldera Social' ),
 	icon: 'shield',
 	category: 'common',
 	keywords: [
 		__( 'Social' ),
 	],
+	attributes: {
+		showTwitter: {
+			type: 'boolean',
+			source: 'meta',
+			meta:   'caldera_social_showFacebook'
+		},
+		shareHeader: {
+			type: 'string',
+			source: 'meta',
+			meta:   'caldera_social_shareHeader'
+		},
 
-	/**
-	 * The edit function describes the structure of your block in the context of the editor.
-	 * This represents what the editor will render when the block is used.
-	 *
-	 * The "edit" property must be a valid function.
-	 *
-	 * @link https://wordpress.org/gutenberg/handbook/block-api/block-edit-save/
-	 */
+
+	},
+
 	edit( {attributes,setAttributes,className} ) {
-		// Creates a <p class='wp-block-cgb-block-caldera-social'></p>.
+		const settings = settings(attributes);
+		const onChange =(newValue) => {
+			setAttributes(newValue);
+		};
 		return (
 			<div className={ className }>
+				<InspectorControls>
+					<SocialShareSettings
+						settings={settings}
+						onChangeSettings={onChange}
+					/>
+				</InspectorControls>
 				<div>
-					<p>Hi Roy</p>
+
+					<SocialShare
+						settings={settings}
+					/>
+
 				</div>
 			</div>
 		);
 	},
 
-	/**
-	 * The save function defines the way in which the different attributes should be combined
-	 * into the final markup, which is then serialized by Gutenberg into post_content.
-	 *
-	 * The "save" property must be specified and must be a valid function.
-	 *
-	 * @link https://wordpress.org/gutenberg/handbook/block-api/block-edit-save/
-	 */
 	save({attributes}) {
+		const settings = settings(attributes);
 		return (
 			<div>
-				<p>Hi Roy</p>
+				<SocialShare
+					settings={settings}
+				/>
 			</div>
 		);
 	},
